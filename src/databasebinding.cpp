@@ -3,6 +3,7 @@
 #include <database_interface/postgresql_database.h>
 #include <string>
 #include <database_interface/db_class.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 
 
 int main(int argc, char **argv)
@@ -26,11 +27,20 @@ int main(int argc, char **argv)
   return 0;
 }
 
+void databaseBinding::positionCallback(const geometry_msgs::PoseWithCovarianceStamped pos)
+{
+  //transform data to the position struct
+  latPos_.latest.sec = pos.header.stamp.toSec();
+  latPos_.x = pos.pose.pose.position.x;
+  latPos_.y = pos.pose.pose.position.y;
+  latPos_.z = pos.pose.pose.position.z;
+}
 
 databaseBinding::databaseBinding()
 {
   ROS_INFO("DatabaseBinding built");
   //TO-DO: read configuration from yaml-file
+  //Initializing the database
   std::string host = "192.168.10.100";
   std::string port = "5432";
   std::string user = "turtlebot";
@@ -38,6 +48,9 @@ databaseBinding::databaseBinding()
   std::string db = "rosdb";
   ROS_INFO("Trying to connect with host %s, port %s, user %s, passwd %s, db %s",host.c_str(), port.c_str(),user.c_str(),passwd.c_str(),db.c_str());
   this->database_ = new database_interface::PostgresqlDatabase (host,port,user,passwd,db);
+
+  //Initialize subscribers
+  position_ = n_.subscribe("/amcl_pose", 10, &databaseBinding::positionCallback, this);
 }
 
 databaseBinding::~databaseBinding()
