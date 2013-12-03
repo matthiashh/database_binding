@@ -7,32 +7,64 @@
 
 int main(int argc, char **argv)
 {
-  ROS_INFO("Database_binding starting");
+  ROS_INFO("Database_binding-node starting");
   ROS_DEBUG("This is a debug-message");
   ros::init(argc, argv, "database_binding");
-  ros::NodeHandle n;
-  std::string host = "192.168.10.100";
-  std::string port = "5432";
-  std::string user = "turtlebot";
-  std::string passwd = "";
-  std::string db = "";
 
- // database_interface::PostgresqlDatabase database(host);
-  database_interface::PostgresqlDatabase database (host,port,user,passwd, db);
-  ROS_INFO("Connection established");
-  //database_interface::PostgresqlDatabase database("192.168.10.100", "5432", "turtlebot", "rosdb");
-  if (!database.isConnected())
+  //creating one database element
+  databaseBinding sql_connection;
 
-  {
-      ROS_INFO("Database failed to connect \n");
-    return -1;
-  }
-  ROS_INFO("Database connected successfully \n");
+  if (sql_connection.getConnection())
+    {
+      ROS_INFO("Connection established");
+    } else {
+      ROS_INFO("Connection NOT established");
+    }
+
+  //run endless
+  sql_connection.run();
   return 0;
-
 }
 
 
 databaseBinding::databaseBinding()
 {
+  ROS_INFO("DatabaseBinding built");
+  //TO-DO: read configuration from yaml-file
+  std::string host = "192.168.10.100";
+  std::string port = "5432";
+  std::string user = "turtlebot";
+  std::string passwd = "";
+  std::string db = "rosdb";
+  ROS_INFO("Trying to connect with host %s, port %s, user %s, passwd %s, db %s",host.c_str(), port.c_str(),user.c_str(),passwd.c_str(),db.c_str());
+  this->database_ = new database_interface::PostgresqlDatabase (host,port,user,passwd,db);
+}
+
+databaseBinding::~databaseBinding()
+{
+  ROS_INFO("DatabaseBinding destroyed");
+}
+
+int databaseBinding::run()
+{
+  ros::Rate r(5);
+  while (ros::ok())
+    {
+      //Do crazy stuff
+
+      ros::spinOnce();
+      r.sleep();
+    }
+  return 0;
+}
+
+bool databaseBinding::getConnection()
+{
+  if (database_->isConnected())
+    {
+      return 1;
+    }
+  else {
+      return 0;
+    }
 }
