@@ -1,12 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(database_binding)
 
+set(ROS_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Debug)
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  database_interface
 )
 
 ## System dependencies are found with CMake's conventions
@@ -79,9 +83,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+  #INCLUDE_DIRS include
 #  LIBRARIES database_binding
-#  CATKIN_DEPENDS roscpp std_msgs
+  CATKIN_DEPENDS roscpp std_msgs database_interface
 #  DEPENDS system_lib
 )
 
@@ -93,6 +97,8 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
+#dirty hack, but works for now
+    ~/catkin_ws/src/sql_database/database_interface/include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -103,14 +109,15 @@ include_directories(
 
 ## Declare a cpp executable
  add_executable(database_binding src/databasebinding.cpp)
-
+#  add_executable(student_test src/students.cpp)
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(database_binding_node database_binding_generate_messages_cpp)
+ add_dependencies(database_binding postgresql_database)
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(database_binding
    ${catkin_LIBRARIES}
+   postgresql_database
  )
 
 #############
