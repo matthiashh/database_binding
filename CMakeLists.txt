@@ -99,6 +99,7 @@ catkin_package(
 include_directories(
 #dirty hack, but works for now
     ~/catkin_ws/src/sql_database/database_interface/include
+    ~/catkin_ws/src/database_binding/include/
   ${catkin_INCLUDE_DIRS}
 )
 

@@ -4,6 +4,7 @@
 #include <database_interface/postgresql_database.h>
 #include <ros/ros.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <database_binding/formPlaces.h>
 
 struct pos {
   double x;
@@ -16,7 +17,7 @@ struct pos {
 class databaseBinding
 {
 private:
-  database_interface::PostgresqlDatabase* database_;
+
   ros::NodeHandle n_;
   ros::Subscriber position_;
   void positionCallback(const geometry_msgs::PoseWithCovarianceStamped pos);
@@ -26,6 +27,7 @@ public:
   ~databaseBinding();
   int run();
   bool getConnection();
+  database_interface::PostgresqlDatabase* database_;
 };
 
 #endif // DATABASEBINDING_H

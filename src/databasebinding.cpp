@@ -1,9 +1,10 @@
 #include "databasebinding.h"
 #include <ros/ros.h>
-#include <database_interface/postgresql_database.h>
+#include <database_interface/postgresql_database.h>   //needed for database object
 #include <string>
 #include <database_interface/db_class.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>  //msg needed to retrieve the latest position
+#include <boost/shared_ptr.hpp>                       //needed for database handling
 
 
 int main(int argc, char **argv)
@@ -21,6 +22,28 @@ int main(int argc, char **argv)
     } else {
       ROS_INFO("Connection NOT established");
     }
+//  std::vector< boost::shared_ptr<Places> > placesAcc;
+//    if (!sql_connection.database_->getList(placesAcc))
+//    {
+//      ROS_INFO("Failed to get list of places\n");
+//      return -1;
+//    }
+//    std::cerr << "Retrieved " << placesAcc.size() << " places(s) \n";
+  std::vector< boost::shared_ptr<Student> > student;
+  std::vector< boost::shared_ptr<Places> > places;
+    if (!sql_connection.database_->getList(student))
+    {
+      ROS_INFO("Failed to get list of students\n");
+    } else
+    {
+    std::cerr << "Retrieved " << student.size() << " student(s) \n";
+    }
+    if (!sql_connection.database_->getList(places))
+    {
+      ROS_INFO("Failed to get list of places\n");
+      return -1;
+    }
+    std::cerr << "Retrieved " << places.size() << " places(s) \n";
 
   //run endless
   sql_connection.run();
