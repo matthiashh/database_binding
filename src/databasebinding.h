@@ -16,12 +16,13 @@ struct pos {
 class databaseBinding
 {
 private:
-  database_interface::PostgresqlDatabase* database_;
   ros::NodeHandle n_;
   ros::Subscriber position_;
   void positionCallback(const geometry_msgs::PoseWithCovarianceStamped pos);
   pos latPos_;
+  database_interface::notification no_;
 public:
+  database_interface::PostgresqlDatabase* database_;
   databaseBinding();
   ~databaseBinding();
   int run();

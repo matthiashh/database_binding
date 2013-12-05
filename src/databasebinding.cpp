@@ -22,6 +22,8 @@ int main(int argc, char **argv)
       ROS_INFO("Connection NOT established");
     }
 
+  sql_connection.database_->listenToChannel("bla2");
+
   //run endless
   sql_connection.run();
   return 0;
@@ -62,12 +64,17 @@ int databaseBinding::run()
 {
   ros::Rate r(5);
   while (ros::ok())
-    {
+      {
       //Do crazy stuff
-
+      if (database_->checkNotifies(no_))
+      {
+      ROS_INFO("Received notification on channel \"%s\" with messages \"%s\"",no_.channel.c_str(),no_.payload.c_str());
+      }
+      no_.channel="";
+      no_.payload="";
       ros::spinOnce();
       r.sleep();
-    }
+      }
   return 0;
 }
 
