@@ -23,6 +23,7 @@ private:
   pos latPos_;
   database_interface::notification no_;
 public:
+  database_interface::PostgresqlDatabase* database_;
   databaseBinding();
   ~databaseBinding();
   int run();
