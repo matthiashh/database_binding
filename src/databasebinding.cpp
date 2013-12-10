@@ -47,7 +47,7 @@ databaseBinding::databaseBinding()
   std::string port = "5432";
   std::string user = "turtlebot";
   std::string passwd = "";
-  std::string db = "rosdb";
+  std::string db = "postgres";
   ROS_INFO("Trying to connect with host %s, port %s, user %s, passwd %s, db %s",host.c_str(), port.c_str(),user.c_str(),passwd.c_str(),db.c_str());
   this->database_ = new database_interface::PostgresqlDatabase (host,port,user,passwd,db);
 
@@ -66,7 +66,7 @@ int databaseBinding::run()
   while (ros::ok())
       {
       //Do crazy stuff
-      if (database_->checkNotifies(no_))
+      if (database_->checkNotify(no_))
       {
       ROS_INFO("Received notification on channel \"%s\" with messages \"%s\"",no_.channel.c_str(),no_.payload.c_str());
       }
