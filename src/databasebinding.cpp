@@ -29,15 +29,15 @@ int main(int argc, char **argv)
 //      return -1;
 //    }
 //    std::cerr << "Retrieved " << placesAcc.size() << " places(s) \n";
-  std::vector< boost::shared_ptr<Student> > student;
+//  std::vector< boost::shared_ptr<Student> > student;
   std::vector< boost::shared_ptr<Places> > places;
-    if (!sql_connection.database_->getList(student))
-    {
-      ROS_INFO("Failed to get list of students\n");
-    } else
-    {
-    std::cerr << "Retrieved " << student.size() << " student(s) \n";
-    }
+//    if (!sql_connection.database_->getList(student))
+//    {
+//      ROS_INFO("Failed to get list of students\n");
+//    } else
+//    {
+//    std::cerr << "Retrieved " << student.size() << " student(s) \n";
+//    }
     if (!sql_connection.database_->getList(places))
     {
       ROS_INFO("Failed to get list of places\n");
