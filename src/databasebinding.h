@@ -17,11 +17,11 @@ struct pos {
 class databaseBinding
 {
 private:
-
   ros::NodeHandle n_;
   ros::Subscriber position_;
   void positionCallback(const geometry_msgs::PoseWithCovarianceStamped pos);
   pos latPos_;
+  database_interface::notification no_;
 public:
   databaseBinding();
   ~databaseBinding();

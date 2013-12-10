@@ -22,6 +22,8 @@ int main(int argc, char **argv)
     } else {
       ROS_INFO("Connection NOT established");
     }
+  sql_connection.database_->listenToChannel("bla");
+
   std::vector< boost::shared_ptr<Places> > places;
 
     if (!sql_connection.database_->getList(places))
@@ -73,7 +75,7 @@ int databaseBinding::run()
   while (ros::ok())
     {
       //Do crazy stuff
-
+      database_->checkNotify(no_);
       ros::spinOnce();
       r.sleep();
     }
