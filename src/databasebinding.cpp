@@ -24,16 +24,7 @@ int main(int argc, char **argv)
     }
   sql_connection.database_->listenToChannel("bla");
 
-  std::vector< boost::shared_ptr<Places> > places;
-
-    if (!sql_connection.database_->getList(places))
-    {
-      ROS_INFO("Failed to get list of places\n");
-      return -1;
-    }
-    std::cerr << "Retrieved " << places.size() << " places(s) \n";
-
-  //run endless
+   //run endless
   sql_connection.run();
   return 0;
 }
@@ -75,7 +66,10 @@ int databaseBinding::run()
   while (ros::ok())
     {
       //Do crazy stuff
-      database_->checkNotify(no_);
+      if (database_->checkNotify(no_))
+        {
+          getPlaces();
+        }
       ros::spinOnce();
       r.sleep();
     }
@@ -91,4 +85,32 @@ bool databaseBinding::getConnection()
   else {
       return 0;
     }
+}
+
+bool databaseBinding::getPlaces()
+{
+  std::vector< boost::shared_ptr<returnPlaces> > places;
+
+//    if (!sql_connection.database_->getList(places))
+//    {
+//      ROS_INFO("Failed to get list of places\n");
+//      return -1;
+//    }
+
+
+    std::vector<std::string> parameter;
+    parameter.push_back("return_id_x_y");
+    database_->callFunction(places,parameter);
+    std::cerr << "Retrieved " << places.size() << " places(s) \n";
+    if (places.size() > 0) {
+        std::cerr << "These are:\n";
+        std::cerr << "key\t" << "pos_x\t" << "pos_y\n";
+      }
+    for (size_t i=0; i<places.size(); i++)
+      {
+        std::cerr << places[i]->id_.data() << "\t";
+        std::cerr << places[i]->pos_x_.data() << "\t";
+        std::cerr << places[i]->pos_y_.data() << "\n";
+      }
+    return true;
 }
