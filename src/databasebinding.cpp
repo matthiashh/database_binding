@@ -24,6 +24,8 @@ int main(int argc, char **argv)
     }
   sql_connection.database_->listenToChannel("bla");
 
+
+
    //run endless
   sql_connection.run();
   return 0;
@@ -98,8 +100,14 @@ bool databaseBinding::getPlaces()
 //    }
 
 
-    std::vector<std::string> parameter;
-    parameter.push_back("return_id_x_y");
+    database_interface::FunctionCallObj parameter;
+    parameter.name = "return_id_x_y";
+    std::string tempParam = "1";
+    parameter.params.push_back(tempParam);
+    tempParam = "2";
+    parameter.params.push_back(tempParam);
+    tempParam = "3";
+    parameter.params.push_back(tempParam);
     database_->callFunction(places,parameter);
     std::cerr << "Retrieved " << places.size() << " places(s) \n";
     if (places.size() > 0) {
