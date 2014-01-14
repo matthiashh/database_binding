@@ -29,7 +29,9 @@ int main(int argc, char **argv)
     }
   sql_connection.databaseListen_->listenToChannel("start");
 
-   //run endless
+  sql_connection.database_->listenToChannel("bla2");
+
+  //run endless
   sql_connection.run();
   return 0;
 }
@@ -75,7 +77,7 @@ int databaseBinding::run()
 
   ros::Rate r(10);
   while (ros::ok())
-    {
+      {
       //Do crazy stuff
 
       ros::spinOnce();

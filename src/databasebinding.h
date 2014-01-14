@@ -8,6 +8,9 @@
 #include <database_binding/formPlaces.h>
 #include <database_binding/returnPlaces.h>
 
+/*! This struct stores a position and a timestamp. 
+ *  Here, the information is provided by AMCL
+ */
 struct pos {
   double x;
   double y;
@@ -15,6 +18,7 @@ struct pos {
   ros::Time rosTime;
 };
 
+//was class databaseBinding : public database_interface::DBClass
 class databaseBinding
 {
 private:
@@ -32,11 +36,19 @@ private:
   bool NotifyThread();
   bool PlacesThread();
 public:
+  //! A database object. It is public to avoid get and set methods. It will be made private in the later process //TODO Make PostgresqlDatabase private
   database_interface::PostgresqlDatabase* database_;
-  database_interface::PostgresqlDatabase* databaseListen_;
+  
+  //! Initializes the setup
   databaseBinding();
+  
+  //! Closes the connection
   ~databaseBinding();
+  
+  //! It is a loop function which is called after the initialization.
   int run();
+  
+  //! Returns, if we have a connection.
   bool getConnection();
 };
 
