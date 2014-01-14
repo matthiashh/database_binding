@@ -1,9 +1,10 @@
 #include "databasebinding.h"
 #include <ros/ros.h>
-#include <database_interface/postgresql_database.h>
+#include <database_interface/postgresql_database.h>   //needed for database object
 #include <string>
 #include <database_interface/db_class.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>  //msg needed to retrieve the latest position
+#include <boost/shared_ptr.hpp>                       //needed for database handling
 
 
 int main(int argc, char **argv)
@@ -15,10 +16,23 @@ int main(int argc, char **argv)
   //creating one database element
   databaseBinding sql_connection;
 
-  if (sql_connection.getConnection())	ROS_INFO("Connection established");
-  else ROS_INFO("Connection NOT established");
+  if (sql_connection.getConnection())
+    {
+      ROS_INFO("Connection established");
+    } else {
+      ROS_INFO("Connection NOT established");
+    }
+  sql_connection.database_->listenToChannel("bla");
 
-  //TODO get configuration from the database
+  std::vector< boost::shared_ptr<Places> > places;
+
+    if (!sql_connection.database_->getList(places))
+    {
+      ROS_INFO("Failed to get list of places\n");
+      return -1;
+    }
+    std::cerr << "Retrieved " << places.size() << " places(s) \n";
+
   sql_connection.database_->listenToChannel("bla2");
 
   //run endless
@@ -38,7 +52,7 @@ void databaseBinding::positionCallback(const geometry_msgs::PoseWithCovarianceSt
 databaseBinding::databaseBinding()
 {
   ROS_INFO("DatabaseBinding built");
-  //TODO: read configuration from yaml-file
+  //TO-DO: read configuration from yaml-file
   //Initializing the database
   std::string host = "192.168.10.100";
   std::string port = "5432";
@@ -55,7 +69,6 @@ databaseBinding::databaseBinding()
 databaseBinding::~databaseBinding()
 {
   ROS_INFO("DatabaseBinding destroyed");
-  //TODO Close connection?
 }
 
 int databaseBinding::run()
@@ -64,12 +77,16 @@ int databaseBinding::run()
   while (ros::ok())
       {
       //Do crazy stuff
+<<<<<<< HEAD
+      database_->checkNotify(no_);
+=======
       if (database_->checkNotify(no_))
       {
       ROS_INFO("Received notification on channel \"%s\" with messages \"%s\"",no_.channel.c_str(),no_.payload.c_str());
       }
       no_.channel="";
       no_.payload="";
+>>>>>>> unstable
       ros::spinOnce();
       r.sleep();
       }
