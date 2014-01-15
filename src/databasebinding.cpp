@@ -28,10 +28,7 @@ int main(int argc, char **argv)
       ROS_INFO("Connection NOT established");
     }
   sql_connection.databaseListen_->listenToChannel("start");
-
-  sql_connection.database_->listenToChannel("bla2");
-
-  //run endless
+ //run endless
   sql_connection.run();
   return 0;
 }
@@ -53,8 +50,8 @@ databaseBinding::databaseBinding()
   robot_id_ = -1;
   std::string host = "192.168.10.100";
   std::string port = "5432";
-  std::string user = "";
-  std::string passwd = "testpassword";
+  std::string user = "turtlebot";
+  std::string passwd = "";
   std::string db = "rosdb";
   ROS_INFO("Trying to connect with host %s, port %s, user %s, passwd %s, db %s",host.c_str(), port.c_str(),user.c_str(),passwd.c_str(),db.c_str());
   this->database_ = new database_interface::PostgresqlDatabase (host,port,user,passwd,db);

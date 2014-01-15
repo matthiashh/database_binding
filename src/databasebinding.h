@@ -38,6 +38,9 @@ private:
 public:
   //! A database object. It is public to avoid get and set methods. It will be made private in the later process //TODO Make PostgresqlDatabase private
   database_interface::PostgresqlDatabase* database_;
+
+  //! An extra database connection to perform the listen task
+  database_interface::PostgresqlDatabase* databaseListen_;
   
   //! Initializes the setup
   databaseBinding();
