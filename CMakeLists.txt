@@ -10,7 +10,8 @@ set(CMAKE_BUILD_TYPE Debug)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
-  database_interface
+ # database_interface
+  sql_database
   message_generation
 )
 
@@ -87,7 +88,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES database_binding
-  CATKIN_DEPENDS roscpp std_msgs database_interface message_runtime
+  CATKIN_DEPENDS roscpp std_msgs sql_database message_runtime
 #  DEPENDS system_lib
 )
 
@@ -115,7 +116,7 @@ include_directories(
 #  add_executable(student_test src/students.cpp)
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
- add_dependencies(database_binding postgresql_database)
+ add_dependencies(database_binding postgresql_database ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(database_binding
