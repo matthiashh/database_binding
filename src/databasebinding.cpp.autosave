@@ -106,6 +106,26 @@ bool databaseBinding::getConnection()
   }
 }
 
+bool databaseBinding::getConfiguration()
+{
+  //first get a configuration
+  std::vector< boost::shared_ptr<returnConfiguration> > configuration;
+  database_interface::FunctionCallObj parameter;
+  parameter.name = "get_configuration";
+  parameter.params.push_back("uuid");
+  database_->callFunction(configuration,parameter);
+  //assigns results to our configuration
+  robot_id_ =  configuration.front()->robot_id_.data();
+
+  //then get the channels to listen to
+  std::vector< boost::shared_ptr<returnPlaces> > places;
+  database_interface::FunctionCallObj parameter_places;
+  parameter_places.name = "get_channels";
+  parameter_places.params.push_back(robot_id_);
+  database_->callFunction(places,parameter_places);
+
+}
+
 bool databaseBinding::getPlaces()
 {
   std::vector< boost::shared_ptr<returnPlaces> > places;
@@ -133,6 +153,8 @@ bool databaseBinding::getPlaces()
     }
   return true;
 }
+
+
 
 bool databaseBinding::NotifyThread()
 {

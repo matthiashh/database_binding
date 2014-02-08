@@ -52,6 +52,7 @@ find_package(catkin REQUIRED COMPONENTS
  add_message_files(
    FILES
    explorationGoal.msg
+   DatabaseConnection.msg
 #   Message1.msg
 #   Message2.msg
  )
@@ -72,8 +73,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
-  # DEPENDENCIES
-  # std_msgs
+  DEPENDENCIES
+  std_msgs
  )
 
 ###################################

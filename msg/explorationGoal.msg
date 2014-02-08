@@ -1,4 +1,5 @@
-#Header header
+Header header
+uint8 task_id
 float32 exploration_x
 float32 exploration_y
 # not used at the moment, but maybe some time in the future
