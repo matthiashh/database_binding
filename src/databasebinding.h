@@ -29,6 +29,7 @@ private:
 
   void positionCallback(const geometry_msgs::PoseWithCovarianceStamped pos);
 
+  bool getConfiguration();
   bool getPlaces();
   bool getUpdate();
   //! This is the function for the thread which receives the notifies.
