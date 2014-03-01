@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
  # database_interface
   sql_database
   message_generation
+  exploration_hh
 )
 
 ## System dependencies are found with CMake's conventions
@@ -51,7 +52,6 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
-   explorationGoal.msg
    DatabaseConnection.msg
 #   Message1.msg
 #   Message2.msg

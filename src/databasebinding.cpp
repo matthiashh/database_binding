@@ -4,12 +4,13 @@
 #include <database_interface/postgresql_database.h>   //needed for database object
 #include <string>                                     //strings are handy
 #include <sstream>
-#include <database_binding/explorationGoal.h>         //if we receive new exloration goals
+#include <exploration_hh/ExplorationGoal.h>         //if we receive new exloration goals
 #include <geometry_msgs/PoseWithCovarianceStamped.h>  //msg needed to retrieve the latest position
 #include <boost/shared_ptr.hpp>                       //needed for database handling
 #include <boost/thread.hpp>                           //used for creating threads
 #include <boost/lexical_cast.hpp>                     //type conversions
 #include <stdlib.h>                                   //for itoa
+#include <database_interface/db_class.h>              //to have a return object
 
 
 
@@ -58,12 +59,11 @@ databaseBinding::databaseBinding()
   ROS_INFO("Trying to connect with host %s, port %s, user %s, passwd %s, db %s",host.c_str(), port.c_str(),user.c_str(),passwd.c_str(),db.c_str());
   this->database_ = new database_interface::PostgresqlDatabase (host,port,user,passwd,db);
   database_->listenToChannel("start");
-  //this->databaseListen_ = new database_interface::PostgresqlDatabase (host,port,user,passwd,db);
 
   //Initialize subscribers and publishers
   position_ = n_.subscribe("/amcl_pose", 10, &databaseBinding::positionCallback, this);
-  explorationGoalPub_ = n_.advertise<database_binding::explorationGoal>("/database_binding/exploration_goals",1000);
-  connection_pub_ = n_.advertise<database_binding::DatabaseConnection>("database_binding/connection_status",10);
+  explorationGoalPub_ = n_.advertise<exploration_hh::ExplorationGoal>("/database_binding/exploration_goals",1000);
+  connection_pub_ = n_.advertise<database_binding::DatabaseConnection>("/database_binding/connection_status",10);
 }
 
 databaseBinding::~databaseBinding()
@@ -81,6 +81,8 @@ int databaseBinding::run()
   //ros::Timer notify_timer = n_.createTimer(ros::Duration(1), &databaseBinding::PlacesThread, this);
   ros::Timer connection_pub_timer = n_.createTimer(ros::Duration(1), &databaseBinding::ConnectionPublish_,this);
 //  boost::thread placesThreadObject (&databaseBinding::PlacesThread, this);
+
+  //returnToolkit test;
 
   ros::Rate r(10);
   while (ros::ok())
@@ -129,8 +131,15 @@ bool databaseBinding::getConfiguration()
 bool databaseBinding::getPlaces()
 {
   std::vector< boost::shared_ptr<returnPlaces> > places;
+  //std::vector< boost::shared_ptr<database_interface::DBClass> > places;
+
+
+  //std::vector< boost::shared_ptr<returnToolkit> > toolkit_places;
+
   database_interface::FunctionCallObj parameter;
-  database_binding::explorationGoal newGoal;
+  exploration_hh::ExplorationGoal newGoal;
+  newGoal.header.stamp = ros::Time::now();
+  newGoal.header.frame_id = "/map";
   parameter.name = "return_id_x_y_prob";
   database_->callFunction(places,parameter);
   std::cerr << "Retrieved " << places.size() << " places(s) \n";
@@ -144,10 +153,10 @@ bool databaseBinding::getPlaces()
       std::cerr << places[i]->pos_x_.data() << "\t";
       std::cerr << places[i]->pos_y_.data() << "\t";
       std::cerr << places[i]->prob_.data() << "\t";
-      newGoal.exploration_x = places[i]->pos_x_.data();
-      newGoal.exploration_y = places[i]->pos_y_.data();
-      newGoal.exploration_z = 0;
-      newGoal.exploration_prob = places[i]->prob_.data();
+      newGoal.pose.pose.position.x = places[i]->pos_x_.data();
+      newGoal.pose.pose.position.y = places[i]->pos_y_.data();
+      newGoal.pose.pose.position.z = 0;
+      newGoal.probability = places[i]->prob_.data();
       explorationGoalPub_.publish (newGoal);
       std::cerr << "PUBLISHED\n";
     }
